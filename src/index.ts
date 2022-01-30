@@ -18,7 +18,7 @@ const {
     },
   ],
   maxTemp: 5500,
-  minTemp: 3000,
+  minTemp: 3500,
   transitionTime: 2 * 1000,
   intervalTime: 5 * 1000,
   latLong: {
@@ -73,7 +73,9 @@ const main = async () => {
       console.log(
         `Adjusting device '${device.id}' colour temp to: ${colourTemp}K`
       );
-      await client.publish(getTopic(device.id), JSON.stringify(payload));
+      await client.publish(getTopic(device.id), JSON.stringify(payload), {
+        retain: true,
+      });
     })
   );
 };
