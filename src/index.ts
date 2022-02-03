@@ -32,7 +32,7 @@ const getTopic = (deviceId: string) => {
   return `shellies/ShellyBulbDuo-${deviceId}/light/0/set`;
 };
 
-const getColourTempForDate = ({ date }: { date: Date }) => {
+const getColourTemp = ({ date }: { date: Date }) => {
   const { sunrise, sunset }: { [key: string]: Date } = SunCalc.getTimes(
     date,
     lat,
@@ -44,28 +44,39 @@ const getColourTempForDate = ({ date }: { date: Date }) => {
 
   const sunriseUnix = sunrise.getTime() / 1000;
   const sunriseDiff = nowUnix - sunriseUnix;
-  if (Math.abs(sunriseDiff) < band) {
-    const fraction = (nowUnix - (sunriseUnix - band)) / (band * 2);
-    return Math.round((maxTemp - minTemp) * fraction + minTemp);
-  }
+  const isInSunriseBand = Math.abs(sunriseDiff) < band;
+  const sunriseFraction = (nowUnix - (sunriseUnix - band)) / (band * 2);
+  const sunriseColourTemp = Math.round(
+    (maxTemp - minTemp) * sunriseFraction + minTemp
+  );
 
   const sunsetUnix = sunset.getTime() / 1000;
   const sunsetDiff = nowUnix - sunsetUnix;
-  if (Math.abs(sunsetDiff) < band) {
-    const fraction = 1 - (nowUnix - (sunsetUnix - band)) / (band * 2);
-    return Math.round((maxTemp - minTemp) * fraction + minTemp);
-  }
+  const isInSunsetBand = Math.abs(sunsetDiff) < band;
+  const sunsetFraction = 1 - (nowUnix - (sunsetUnix - band)) / (band * 2);
+  const sunsetColourTemp = Math.round(
+    (maxTemp - minTemp) * sunsetFraction + minTemp
+  );
 
   const isDaytime = nowUnix > sunriseUnix && nowUnix < sunsetUnix;
-  return Math.round(isDaytime ? maxTemp : minTemp);
+
+  const colourTemp = isInSunriseBand
+    ? sunriseColourTemp
+    : isInSunsetBand
+    ? sunsetColourTemp
+    : isDaytime
+    ? maxTemp
+    : minTemp;
+
+  return { colourTemp };
 };
 
 const client = mqtt.connect("mqtt://localhost:1883");
+
 const main = async () => {
   const date = new Date();
   console.log("Checking colour temps...");
-
-  const colourTemp = getColourTempForDate({ date });
+  const { colourTemp } = getColourTemp({ date });
 
   await Promise.all(
     devices.map(async (device) => {
