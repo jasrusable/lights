@@ -1,6 +1,7 @@
 version: '3.7'
 
 services:
-  app:
+  lights-colour-temp:
     build: .
     network_mode: "host"
+    restart: always
