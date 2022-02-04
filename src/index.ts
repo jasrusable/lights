@@ -16,6 +16,7 @@ const {
     { id: "E8DB84D46422" },
     { id: "E8DB84D4AD89" },
     { id: "E8DB84D4C76E" },
+    { id: "E8DB84D4C763" },
   ],
   maxTemp: 5500,
   minTemp: 3500,
