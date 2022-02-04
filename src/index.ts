@@ -19,8 +19,8 @@ const {
   ],
   maxTemp: 5500,
   minTemp: 3500,
-  transitionTime: 2 * 1000,
-  intervalTime: 5 * 1000,
+  transitionTime: 5 * 1000,
+  intervalTime: 30 * 1000,
   latLong: {
     lat: -33.92,
     long: 18.42,
@@ -73,6 +73,8 @@ const getColourTemp = ({ date }: { date: Date }) => {
 
 const client = mqtt.connect("mqtt://localhost:1883");
 
+const cache: { [key: string]: string | undefined } = {};
+
 const main = async () => {
   const date = new Date();
   console.log("Checking colour temps...");
@@ -81,12 +83,20 @@ const main = async () => {
   await Promise.all(
     devices.map(async (device) => {
       const payload = { temp: colourTemp, transition: transitionTime };
+      const payloadHash = JSON.stringify(payload);
+      const cachedPayloadHash = cache[device.id];
+      const arePayloadHashesDifferent = payloadHash !== cachedPayloadHash;
+
+      if (!arePayloadHashesDifferent) return;
+
       console.log(
-        `Adjusting device '${device.id}' colour temp to: ${colourTemp}K`
+        `Setting device '${device.id}' to: ${JSON.stringify(payload)}`
       );
       await client.publish(getTopic(device.id), JSON.stringify(payload), {
         retain: true,
       });
+
+      cache[device.id] = payloadHash;
     })
   );
 };
