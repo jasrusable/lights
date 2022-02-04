@@ -13,9 +13,9 @@ const {
   buffer,
 } = {
   devices: [
-    {
-      id: "E8DB84D46422",
-    },
+    { id: "E8DB84D46422" },
+    { id: "E8DB84D4AD89" },
+    { id: "E8DB84D4C76E" },
   ],
   maxTemp: 5500,
   minTemp: 3500,
