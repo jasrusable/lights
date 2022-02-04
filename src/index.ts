@@ -19,7 +19,7 @@ const {
   ],
   maxTemp: 5500,
   minTemp: 3500,
-  transitionTime: 5 * 1000,
+  transitionTime: 4 * 1000,
   intervalTime: 30 * 1000,
   latLong: {
     lat: -33.92,
