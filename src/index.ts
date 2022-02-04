@@ -18,10 +18,10 @@ const {
     { id: "E8DB84D4C76E" },
     { id: "E8DB84D4C763" },
   ],
-  maxTemp: 5500,
+  maxTemp: 6500,
   minTemp: 3500,
   transitionTime: 4 * 1000,
-  intervalTime: 30 * 1000,
+  intervalTime: 10 * 1000,
   latLong: {
     lat: -33.92,
     long: 18.42,
