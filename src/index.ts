@@ -12,12 +12,7 @@ const {
   latLong: { lat, long },
   buffer,
 } = {
-  devices: [
-    { id: "E8DB84D46422" },
-    { id: "E8DB84D4AD89" },
-    { id: "E8DB84D4C76E" },
-    { id: "E8DB84D4C763" },
-  ],
+  devices: [{ id: "D46422" }, { id: "D4AD89" }],
   maxTemp: 6500,
   minTemp: 3500,
   transitionTime: 4 * 1000,
