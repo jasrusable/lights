@@ -12,10 +12,10 @@ const {
   latLong: { lat, long },
   buffer,
 } = {
-  devices: [{ id: "D46422" }, { id: "D4AD89" }, { id: "E8DB84D506B3" }, { id: "E8DB84D24FF7" }],
-  maxTemp: 6500,
+  devices: [{ id: "D46422" }, { id: "D4AD89" }, { id: "E8DB84D506B3" }, { id: "E8DB84D24FF7" }, { id: "8CAAB55F93B5" }, {id: "E8DB84D515BA" }],
+  maxTemp: 6000,
   minTemp: 3500,
-  transitionTime: 4 * 1000,
+  transitionTime: 2 * 1000,
   intervalTime: 10 * 1000,
   latLong: {
     lat: -33.92,
