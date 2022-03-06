@@ -12,16 +12,16 @@ const {
   latLong: { lat, long },
   buffer,
 } = {
-  devices: [{ id: "D46422" }, { id: "D4AD89" }, { id: "E8DB84D506B3" }, { id: "E8DB84D24FF7" }, { id: "8CAAB55F93B5" }, {id: "E8DB84D515BA" }],
-  maxTemp: 5800,
+  devices: [{ id: "D46422" }, { id: "D4AD89" }, { id: "E8DB84D506B3" }, { id: "E8DB84D24FF7" }, { id: "8CAAB55F93B5" }, {id: "E8DB84D515BA" }, { id: "E8DB84D24FD9" }],
+  maxTemp: 5900,
   minTemp: 3500,
-  transitionTime: 300,
+  transitionTime: 1000,
   intervalTime: 60 * 1000,
   latLong: {
     lat: -33.92,
     long: 18.42,
   },
-  buffer: 60,
+  buffer: 30,
 };
 
 const getTopic = (deviceId: string) => {
