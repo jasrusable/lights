@@ -38,21 +38,22 @@ const getColourTemp = ({ date }: { date: Date }) => {
   );
   const nowUnix = date.getTime() / 1000;
   const bufferSeconds = bufferMinutes * 60;
+  const halfBufferSeconds = bufferSeconds / 2;
 
   const sunriseUnix = sunrise.getTime() / 1000;
   const sunriseDiff = nowUnix - sunriseUnix;
-  const isInSunriseBand = Math.abs(sunriseDiff) < bufferSeconds / 2;
+  const isInSunriseBand = Math.abs(sunriseDiff) < halfBufferSeconds;
   const sunriseFraction =
-    (nowUnix - (sunriseUnix - bufferSeconds)) / bufferSeconds;
+    (nowUnix - (sunriseUnix - halfBufferSeconds)) / bufferSeconds;
   const sunriseColourTemp = Math.round(
     (maxTemp - minTemp) * sunriseFraction + minTemp
   );
 
   const sunsetUnix = sunset.getTime() / 1000;
   const sunsetDiff = nowUnix - sunsetUnix;
-  const isInSunsetBand = Math.abs(sunsetDiff) < bufferSeconds / 2;
+  const isInSunsetBand = Math.abs(sunsetDiff) < halfBufferSeconds;
   const sunsetFraction =
-    1 - (nowUnix - (sunsetUnix - bufferSeconds)) / bufferSeconds;
+    1 - (nowUnix - (sunsetUnix - halfBufferSeconds)) / bufferSeconds;
   const sunsetColourTemp = Math.round(
     (maxTemp - minTemp) * sunsetFraction + minTemp
   );
