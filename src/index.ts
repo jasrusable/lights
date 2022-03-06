@@ -3,26 +3,28 @@ import mqtt from "async-mqtt";
 import SunCalc from "suncalc";
 import { setIntervalAsync } from "set-interval-async/dynamic";
 
-const {
-  devices,
-  maxTemp,
-  minTemp,
-  transitionTime,
-  intervalTime,
-  latLong: { lat, long },
-  buffer,
-} = {
-  devices: [{ id: "D46422" }, { id: "D4AD89" }, { id: "E8DB84D506B3" }, { id: "E8DB84D24FF7" }, { id: "8CAAB55F93B5" }, {id: "E8DB84D515BA" }, { id: "E8DB84D24FD9" }],
-  maxTemp: 5900,
-  minTemp: 3500,
-  transitionTime: 1000,
-  intervalTime: 60 * 1000,
-  latLong: {
-    lat: -33.92,
-    long: 18.42,
-  },
-  buffer: 30,
+// Lights to control
+const devices = [
+  { id: "D46422" },
+  { id: "D4AD89" },
+  { id: "E8DB84D506B3" },
+  { id: "E8DB84D24FF7" },
+  { id: "8CAAB55F93B5" },
+  { id: "E8DB84D515BA" },
+  { id: "E8DB84D24FD9" },
+];
+// Lat long
+const latLong = {
+  lat: -33.92,
+  long: 18.42,
 };
+const maxTemp = 5900;
+const minTemp = 3500;
+// Transition time for applying light settings
+const transitionTimeMilliseconds = 1000;
+const updateFrequencySeconds = 60;
+// How long to transition over in minutes.
+const bufferMinutes = 30;
 
 const getTopic = (deviceId: string) => {
   return `shellies/ShellyBulbDuo-${deviceId}/light/0/set`;
@@ -31,25 +33,26 @@ const getTopic = (deviceId: string) => {
 const getColourTemp = ({ date }: { date: Date }) => {
   const { sunrise, sunset }: { [key: string]: Date } = SunCalc.getTimes(
     date,
-    lat,
-    long
+    latLong.lat,
+    latLong.long
   );
-
   const nowUnix = date.getTime() / 1000;
-  const band = buffer * 60;
+  const bufferSeconds = bufferMinutes * 60;
 
   const sunriseUnix = sunrise.getTime() / 1000;
   const sunriseDiff = nowUnix - sunriseUnix;
-  const isInSunriseBand = Math.abs(sunriseDiff) < band;
-  const sunriseFraction = (nowUnix - (sunriseUnix - band)) / (band * 2);
+  const isInSunriseBand = Math.abs(sunriseDiff) < bufferSeconds / 2;
+  const sunriseFraction =
+    (nowUnix - (sunriseUnix - bufferSeconds)) / bufferSeconds;
   const sunriseColourTemp = Math.round(
     (maxTemp - minTemp) * sunriseFraction + minTemp
   );
 
   const sunsetUnix = sunset.getTime() / 1000;
   const sunsetDiff = nowUnix - sunsetUnix;
-  const isInSunsetBand = Math.abs(sunsetDiff) < band;
-  const sunsetFraction = 1 - (nowUnix - (sunsetUnix - band)) / (band * 2);
+  const isInSunsetBand = Math.abs(sunsetDiff) < bufferSeconds / 2;
+  const sunsetFraction =
+    1 - (nowUnix - (sunsetUnix - bufferSeconds)) / bufferSeconds;
   const sunsetColourTemp = Math.round(
     (maxTemp - minTemp) * sunsetFraction + minTemp
   );
@@ -78,7 +81,10 @@ const main = async () => {
 
   await Promise.all(
     devices.map(async (device) => {
-      const payload = { temp: colourTemp, transition: transitionTime };
+      const payload = {
+        temp: colourTemp,
+        transition: transitionTimeMilliseconds,
+      };
       const payloadHash = JSON.stringify(payload);
       const cachedPayloadHash = cache[device.id];
       const arePayloadHashesDifferent = payloadHash !== cachedPayloadHash;
@@ -99,4 +105,4 @@ const main = async () => {
 
 console.log("Starting...");
 main();
-setIntervalAsync(main, intervalTime);
+setIntervalAsync(main, updateFrequencySeconds * 1000);
