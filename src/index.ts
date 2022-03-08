@@ -12,6 +12,7 @@ const devices = [
   { id: "8CAAB55F93B5" },
   { id: "E8DB84D515BA" },
   { id: "E8DB84D24FD9" },
+  { id: "E8DB84D46622" },
 ];
 // Lat long
 const latLong = {
