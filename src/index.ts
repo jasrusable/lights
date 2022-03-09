@@ -19,7 +19,7 @@ const latLong = {
   lat: -33.92,
   long: 18.42,
 };
-const maxTemp = 6100;
+const maxTemp = 5900;
 const minTemp = 3500;
 // Transition time for applying light settings
 const transitionTimeMilliseconds = 1000;
