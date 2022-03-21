@@ -23,7 +23,7 @@ const maxTemp = 5900;
 const minTemp = 3500;
 // Transition time for applying light settings
 const transitionTimeMilliseconds = 1000;
-const updateFrequencySeconds = 60;
+const updateFrequencySeconds = 30;
 // How long to transition over in minutes.
 const bufferMinutes = 30;
 
