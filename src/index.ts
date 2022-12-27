@@ -19,11 +19,11 @@ const latLong = {
   lat: -33.92,
   long: 18.42,
 };
-const maxTemp = 5900;
-const minTemp = 3500;
+const maxTemp = 5800;
+const minTemp = 3000;
 // Transition time for applying light settings
 const transitionTimeMilliseconds = 1000;
-const updateFrequencySeconds = 30;
+const updateFrequencySeconds = 15;
 // How long to transition over in minutes.
 const bufferMinutes = 30;
 
@@ -78,7 +78,6 @@ const cache: { [key: string]: string | undefined } = {};
 
 const main = async () => {
   const date = new Date();
-  console.log("Checking colour temps...");
   const { colourTemp } = getColourTemp({ date });
 
   await Promise.all(
@@ -93,9 +92,6 @@ const main = async () => {
 
       if (!arePayloadHashesDifferent) return;
 
-      console.log(
-        `Setting device '${device.id}' to: ${JSON.stringify(payload)}`
-      );
       await client.publish(getTopic(device.id), JSON.stringify(payload), {
         retain: true,
       });
